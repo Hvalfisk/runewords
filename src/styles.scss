@@ -1,1 +1,12 @@
 @import '../node_modules/modern-normalize/modern-normalize.css';
+@import './styles/theme.scss';
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  background-color: var(--background-color);
+  overflow: hidden;
+}

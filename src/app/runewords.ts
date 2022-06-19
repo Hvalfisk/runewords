@@ -257,7 +257,7 @@ export const runewords: Runeword[] = [{
   attributes: ["20% Chance To Cast Level 16 Tornado On Striking", "16% Chance To Cast Level 21 Frozen Orb On Attack", "20% Bonus To Attack Rating", "Adds 160-250 Magic Damage", "Adds 60-180 Fire Damage", "+5-10 To All Attributes (varies)", "+10 To Dexterity", "38% Damage Taken Goes To Mana", "75% Extra Gold From Monsters", "Level 15 Iron Maiden (40 Charges)", "Requirements -20%"],
   ladderOnly: true
 }, {
-  name: "Principle (Paladin)",
+  name: "Principle",
   runes: ["Ral", "Gul", "Eld"],
   itemType: "Armor",
   itemCategories: ['armor'],
@@ -297,7 +297,7 @@ export const runewords: Runeword[] = [{
   attributes: ["Ignore Target's Defense", "+273 Poison Damage Over 6 Seconds", "7% Mana Stolen Per Hit", "Prevent Monster Heal", "Hit Causes Monster To Flee 25%", "Level 13 Poison Nova (11 Charges)", "Level 15 Poison Explosion (27 Charges)"],
   ladderOnly: false
 }, {
-  name: "Rain (Druid)",
+  name: "Rain",
   runes: ["Ort", "Mal", "Ith"],
   itemType: "Armor",
   itemCategories: ['armor'],
@@ -353,7 +353,7 @@ export const runewords: Runeword[] = [{
   attributes: ["10% Chance To Cast Level 17 Chain Lightning On Striking", "7% Chance To Cast Level 13 Static Field On Striking", "+20% Increased Attack Speed", "+180-220% Enhanced Damage (varies)", "Ignore Target's Defense", "-35% To Enemy Lightning Resistance", "25% Chance of Open Wounds", "+9-11 Magic Absorb (varies)", "+2 To Mana After Each Kill", "Level 18 Summon Spirit Wolf (30 Charges)"],
   ladderOnly: false
 }, {
-  name: "Enlightenment (Sorceress)",
+  name: "Enlightenment",
   runes: ["Pul", "Ral", "Sol"],
   itemType: "Armor",
   itemCategories: ['armor'],
@@ -393,7 +393,7 @@ export const runewords: Runeword[] = [{
   attributes: ["+25% Increased Attack Speed", "+160-210% Enhanced Damage (varies)", "50-80% Bonus To Attack Rating (varies)", "+75% Damage To Undead", "+50 To Attack Rating Against Undead", "Adds 1-50 Lightning Damage", "+1 To Berserk", "+1 To Zeal", "Hit Blinds Target +10", "Hit Causes Monster To Flee 25%", "75% Extra Gold From Monsters", "Level 3 Heart of Wolverine (12 Charges)"],
   ladderOnly: false
 }, {
-  name: "Treachery (Assassin)",
+  name: "Treachery",
   runes: ["Shael", "Thul", "Lem"],
   itemType: "Armor",
   itemCategories: ['armor'],
@@ -473,7 +473,7 @@ export const runewords: Runeword[] = [{
   attributes: ["+15% Increased Attack Speed", "+120% Enhanced Damage", "+200 to Attack Rating", "Adds 3-14 Cold Damage (3 sec)", "40% Chance of Crushing Blow", "Knockback", "+10 to Vitality", "Magic Damage Reduced By 2", "Level 4 Corpse Explosion (12 Charges)"],
   ladderOnly: false
 }, {
-  name: "Myth (Barbarian)",
+  name: "Myth",
   runes: ["Hel", "Amn", "Nef"],
   itemType: "Armor",
   itemCategories: ['armor'],
@@ -481,7 +481,7 @@ export const runewords: Runeword[] = [{
   attributes: ["3% Chance To Cast Level 1 Howl When Struck", "10% Chance To Cast Level 1 Taunt On Striking", "+2 To Barbarian Skill Levels", "+30 Defense Vs. Missile", "Replenish Life +10", "Attacker Takes Damage of 14", "Requirements -15%"],
   ladderOnly: false
 }, {
-  name: "Peace (Amazon)",
+  name: "Peace",
   runes: ["Shael", "Thul", "Amn"],
   itemType: "Armor",
   itemCategories: ['armor'],

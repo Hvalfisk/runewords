@@ -1,18 +1,23 @@
-<div>
-  <input type="text" [formControl]="searchControl">
-  <div>
+<div class="main-container">
+  <div class="layout-container">
+    <h1>Runewords</h1>
+    <div class="filter-container">
+      <div class="search-container">
+        <input id="search" type="text" [formControl]="searchControl" placeholder="Search">
+      </div>
+      <div class="runes-container checkbox-group">
     <label *ngFor="let rune of (runes$ | async) ?? []">
       <input type="checkbox" [checked]="rune.checked" (change)="toggleRune(rune.value, $event.target)">
       {{rune.value}}
     </label>
   </div>
-  <div>
+  <div class="checkbox-group">
     <label *ngFor="let sock of (sockets$ | async) ?? []">
       <input type="checkbox" [checked]="sock.checked" (change)="toggleSocket(sock.value, $event.target)">
       {{sock.value}}
     </label>
   </div>
-  <div>
+  <div class="checkbox-group">
     <label *ngFor="let itemCat of (itemCategories$ | async) ?? []">
       <input type="checkbox" [checked]="itemCat.checked" (change)="toggleItemCategory(itemCat.value, $event.target)">
       {{itemCat.value}}
@@ -20,19 +25,30 @@
   </div>
 </div>
 <div>
-  <table>
+  <div class="table-container">
+    <table class="rune-table">
     <tbody>
       <tr *ngFor="let runeword of (filteredRunewords$ | async) ?? []">
-        <td>{{runeword.name}}</td>
-        <td>{{runeword.level}}</td>
         <td>
-          <div *ngFor="let attribute of runeword.attributes">{{attribute}}</div>
+          <a class="runeword-name" href="https://diablo2.diablowiki.net/{{runeword.name}}">{{runeword.name}}</a>
+          <div>{{runeword.itemType}} {{'{' + runeword.runes.length + '}'}}</div>
+          <div>Clvl Required: {{runeword.level}}</div>
         </td>
         <td>
-          <div *ngFor="let rune of runeword.runes">{{rune}}</div>
+          <div *ngFor="let rune of runeword.runes" class="rune">
+            <a href="https://diablo2.diablowiki.net/{{rune}}">
+              <img src="/assets/{{rune}}.webp">
+              <span>{{rune}}</span>
+            </a>
+          </div>
         </td>
-        <td>{{runeword.itemType}}</td>
+        <td class="attributes">
+          <div *ngFor="let attribute of runeword.attributes" class="attribute">{{attribute}}</div>
+        </td>
       </tr>
     </tbody>
   </table>
+  </div>
+  </div>
+  </div>
 </div>

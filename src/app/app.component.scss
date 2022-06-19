@@ -1,0 +1,75 @@
+@import '../styles/theme.scss';
+
+* {
+  color: whitesmoke;
+  background-color: $background-color;
+  font-family: $font;
+}
+
+.main-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  overflow-y: scroll;
+
+}
+
+.layout-container {
+  max-width: 900px;
+  flex: 1;
+}
+
+.search-container {
+  label {
+    margin: 0 1rem;
+  }
+
+  input {
+    border: none;
+    border-bottom: 1px solid red;
+    padding: 0 0.5rem 0.25rem 0.5rem;
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  margin: 1rem 0;
+
+  >* {
+    padding: 0.5rem 0.5rem;
+    flex: 0 1 6rem;
+  }
+}
+
+
+.rune a {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.rune-table {
+  width: 100%;
+
+  td {
+    padding: 0.25rem;
+  }
+}
+
+a,
+a:visited {
+  text-decoration: none;
+
+  &,
+  * {
+    color: rgb(255, 184, 26);
+  }
+
+  &.runeword-name {
+    font-weight: bold;
+  }
+}
