@@ -64,7 +64,7 @@ export class AppComponent {
         const runewordAsString = (runeword.runes.join(' ') + runeword.attributes.join(' ') + runeword.name + runeword.itemType).toLowerCase();
         const containsString = filt.search.length === 0 || filt.search.every(term => runewordAsString.includes(term));
         const fitsSockets = filt.sockets.length === 0 || filt.sockets.includes(runeword.runes.length);
-        const fitsRunes = filt.runes.length === 0 || filt.runes.every(rune => runeword.runes.includes(rune));
+        const fitsRunes = filt.runes.length === 0 || runeword.runes.every(rune => filt.runes.includes(rune));
         const fitsCategories = filt.itemCategories.length === 0 || filt.itemCategories.some(cat => runeword.itemCategories.includes(cat));
         return containsString && fitsSockets && fitsRunes && fitsCategories;
       })
