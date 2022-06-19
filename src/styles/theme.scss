@@ -1,6 +1,8 @@
 :root {
   --background-color: #240505;
+  --background-color-hover: #180404;
 }
 
 $background-color: var(--background-color);
+$background-color-hover: var(--background-color-hover);
 $font: Verdana, Arial, Helvetica, sans-serif;

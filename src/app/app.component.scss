@@ -1,4 +1,4 @@
-@import '../styles/theme.scss';
+@import "../styles/theme.scss";
 
 * {
   color: whitesmoke;
@@ -13,7 +13,7 @@
   flex-flow: row nowrap;
   justify-content: center;
   overflow-y: scroll;
-
+  font-size: 12px;
 }
 
 .layout-container {
@@ -38,25 +38,51 @@
   flex-flow: row wrap;
   justify-content: flex-start;
   margin: 1rem 0;
+  > * {
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    flex: 0 1 5rem;
 
-  >* {
-    padding: 0.5rem 0.5rem;
-    flex: 0 1 6rem;
+    &:hover {
+      cursor: pointer;
+      background-color: $background-color-hover;
+    }
   }
 }
-
 
 .rune a {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  margin: 0.5rem 0;
+
+  span {
+    padding-left: 0.25rem;
+  }
+}
+
+.table-container {
+  margin-bottom: 4rem;
 }
 
 .rune-table {
+  table-layout: fixed;
+  border-collapse: collapse;
   width: 100%;
 
   td {
+    border: 1px solid grey;
     padding: 0.25rem;
+    &:first-child {
+      width: 25%;
+    }
+
+    &:nth-child(2) {
+      width: 15%;
+    }
+
+    .attribute {
+      margin-bottom: 0.25rem;
+    }
   }
 }
 
