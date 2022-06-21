@@ -37,13 +37,20 @@
         <td>
           <div *ngFor="let rune of runeword.runes" class="rune">
             <a href="https://diablo2.diablowiki.net/{{rune}}">
-              <img src="assets/{{rune}}.webp">
-              <span>{{rune}}</span>
+              <span class="rune-image">
+                <img src="assets/{{rune}}.webp">
+                </span>
+                <span class="rune-text">{{rune}}</span>
             </a>
           </div>
         </td>
-        <td class="attributes">
-          <div *ngFor="let attribute of runeword.attributes" class="attribute">{{attribute}}</div>
+        <td>
+          <div class="attributes">
+            <div *ngFor="let attribute of runeword.attributes" class="attribute">
+              <span *ngFor="let attributePart of (attribute | attributeNumbers)"
+                [ngClass]="attributePart.type">{{attributePart.text}}</span>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>

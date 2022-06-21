@@ -55,7 +55,7 @@
   align-items: center;
   margin: 0.5rem 0;
 
-  span {
+  .rune-text {
     padding-left: 0.25rem;
   }
 }
@@ -79,9 +79,30 @@
     &:nth-child(2) {
       width: 15%;
     }
+  }
 
-    .attribute {
+  .attributes {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 1rem;
+    .attribute:not(:last-child) {
       margin-bottom: 0.25rem;
+    }
+    .attribute {
+      color: $attribute-color;
+      text-align: center;
+
+      .number {
+        color: yellow;
+      }
+      .varies {
+        color: whitesmoke;
+      }
+      .text {
+        color: $attribute-color;
+      }
     }
   }
 }
@@ -92,7 +113,7 @@ a:visited {
 
   &,
   * {
-    color: rgb(255, 184, 26);
+    color: $link-color;
   }
 
   &.runeword-name {

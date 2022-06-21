@@ -62,7 +62,7 @@ export const runewords: Runeword[] = [{
   itemType: "Armor",
   itemCategories: ['armor'],
   level: 65,
-  attributes: ["+2 To All Skills", "+45% Faster Run/Walk", "+1 To Teleport", "+750-775 Defense (Varies)", "+(0.75*Clvl) To Strength (Based On Character Level)", "Increase Maximum Life 5%", "Damage Reduced By 8%", "+14 Life After Each Kill", "15% Damage Taken Goes To Mana", "(1*Clvl)% Better Chance of Getting Magic Items (Based On Character Level)"],
+  attributes: ["+2 To All Skills", "+45% Faster Run/Walk", "+1 To Teleport", "+750-775 Defense (varies)", "+(0.75*Clvl) To Strength (Based On Character Level)", "Increase Maximum Life 5%", "Damage Reduced By 8%", "+14 Life After Each Kill", "15% Damage Taken Goes To Mana", "(1*Clvl)% Better Chance of Getting Magic Items (Based On Character Level)"],
   ladderOnly: false
 }, {
   name: "Phoenix",

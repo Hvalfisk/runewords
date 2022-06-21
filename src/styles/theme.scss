@@ -1,8 +1,12 @@
 :root {
-  --background-color: #240505;
-  --background-color-hover: #180404;
+  --background-color: #240000;
+  --background-color-hover: #180000;
+  --link-color: rgb(255, 184, 26);
+  --attribute-color: rgb(126, 171, 255);
 }
 
 $background-color: var(--background-color);
 $background-color-hover: var(--background-color-hover);
+$link-color: var(--link-color);
 $font: Verdana, Arial, Helvetica, sans-serif;
+$attribute-color: var(--attribute-color);
