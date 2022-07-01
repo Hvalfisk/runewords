@@ -1,100 +1,142 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { runes, runewords } from './runewords';
-import { ItemCategory, Rune, Runeword } from './types/runeword';
-import { BehaviorSubject, combineLatest, filter, map, Observable, shareReplay, startWith, Subject, takeUntil } from 'rxjs';
+import { ITEM_CATEGORIES, RUNES, RUNEWORDS, SOCKETS } from './runewords';
+import { ItemCategory, Rune, Socket } from './types/runeword';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, distinctUntilKeyChanged, filter, map, Observable, shareReplay, startWith, Subject, takeUntil } from 'rxjs';
+
+type FilterState = Readonly<{
+  searchString: string;
+  runes: Record<Rune, boolean>;
+  sockets: Record<Socket, boolean>;
+  itemCategories: Record<ItemCategory, boolean>;
+  reverse: boolean;
+  sortBy: 'rune' | 'tier' | 'name';
+}>;
+
+type TypeExtract<T, E> = {
+  [R in keyof T]: T[R] extends E ? E : never;
+};
+
+type RecordExtract<T> = TypeExtract<T, Record<any, any>>;
+
+type RecordPropertyKeyType<T, K extends keyof RecordExtract<T>> = T[K] extends Record<infer L, unknown> ? L : never;
+
+const defaultFilterState: FilterState = {
+  searchString: '',
+  reverse: false,
+  sortBy: 'rune',
+  sockets: { 2: false, 3: false, 4: false, 5: false, 6: false },
+  itemCategories: { 'armor': false, 'head': false, 'melee': false, 'ranged': false, 'shield': false },
+  runes: RUNES.reduce(
+    (acc, curr) => ({ ...acc, [curr]: false }),
+    {} as { [T in Rune]: boolean }
+  )
+};
+
+function filterStateValid(filterState: unknown): filterState is FilterState {
+  return typeof filterState === 'object'
+    && filterState !== null
+    && (Object.keys(defaultFilterState) as (keyof FilterState)[]).every(k => typeof (filterState as FilterState)[k] === typeof defaultFilterState[k]);
+}
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private readonly destroyed = new Subject<void>();
   title = 'runewords';
-  readonly runewords: ReadonlyArray<Runeword> = runewords;
-  readonly runes: ReadonlyArray<Rune> = runes;
-  readonly sockets = [2, 3, 4, 5, 6];
-  readonly itemCategories: ItemCategory[] = ['armor', 'head', 'melee', 'ranged', 'shield'];
-  readonly searchControl = new FormControl(sessionStorage.getItem('search') ?? '');
-  readonly runesCheckedSubject = new BehaviorSubject<Record<Rune, boolean>>(
-    this.runes.reduce(
-      (acc, curr) => ({ ...acc, [curr]: false }), {} as Partial<Record<Rune, boolean>>
-    ) as Record<Rune, boolean>
-  );
-  readonly runes$: Observable<({ value: Rune, checked: boolean })[]> = this.runesCheckedSubject.pipe(
-    map(runesChecked =>
-      this.runes.map(rune => ({ value: rune, checked: runesChecked[rune] }))
-    )
-  );
-  readonly socketsCheckedSubject = new BehaviorSubject<Record<number, boolean>>({ 2: false, 3: false, 4: false, 5: false, 6: false });
-  readonly sockets$: Observable<({ value: number, checked: boolean })[]> =
-    this.socketsCheckedSubject.pipe(
-      map(socketsChecked =>
-        this.sockets.map(socket => ({ value: socket, checked: socketsChecked[socket] }))
-      )
-    );
-  readonly itemCategoriesCheckedSubject = new BehaviorSubject<Record<ItemCategory, boolean>>({ 'armor': false, 'head': false, 'melee': false, 'ranged': false, 'shield': false });
-  readonly itemCategories$: Observable<({ value: ItemCategory, checked: boolean })[]> =
-    this.itemCategoriesCheckedSubject.pipe(
-      map(itemCategoriesChecked =>
-        this.itemCategories.map(itemCategory => ({ value: itemCategory, checked: itemCategoriesChecked[itemCategory] }))
-      )
-    );
 
-  readonly searchValue$ = this.searchControl.valueChanges.pipe(startWith(this.searchControl.value), filter((s: any): s is string => typeof s === 'string'), shareReplay(1));
+  readonly filterStateSubject = new BehaviorSubject<FilterState>(defaultFilterState);
+
+  readonly runes$: Observable<({ value: Rune, checked: boolean })[]> =
+    this.filterStateSubject.pipe(
+      distinctUntilKeyChanged('runes'),
+      map(filt =>
+        RUNES.map(rune => ({ value: rune, checked: filt.runes[rune] }))
+      )
+    );
+  readonly sockets$: Observable<({ value: Socket, checked: boolean })[]> =
+    this.filterStateSubject.pipe(
+      distinctUntilKeyChanged('sockets'),
+      map(filt =>
+        SOCKETS.map(socket => ({ value: socket, checked: filt.sockets[socket] }))
+      )
+    );
+  readonly itemCategories$: Observable<({ value: ItemCategory, checked: boolean })[]> =
+    this.filterStateSubject.pipe(
+      distinctUntilKeyChanged('itemCategories'),
+      map(filt =>
+        ITEM_CATEGORIES.map(itemCategory => ({ value: itemCategory, checked: filt.itemCategories[itemCategory] }))
+      )
+    );
+  readonly reverseOrder$ = this.filterStateSubject.pipe(
+    distinctUntilKeyChanged('reverse'),
+    map(filt => filt.reverse)
+  );
+
+  readonly runewords$ = this.reverseOrder$.pipe(map(reverse => reverse ? [...RUNES].reverse() : RUNES));
+
+  readonly searchString$ = this.filterStateSubject.pipe(
+    distinctUntilKeyChanged('searchString'),
+    map(filt => filt.searchString)
+  );
 
   readonly filter$ = combineLatest([
-    this.searchValue$,
+    this.searchString$,
     this.runes$.pipe(map(v => this.extractChecked(v))),
     this.sockets$.pipe(map(v => this.extractChecked(v))),
-    this.itemCategories$.pipe(map(v => this.extractChecked(v)))
+    this.itemCategories$.pipe(map(v => this.extractChecked(v))),
+    this.reverseOrder$
   ])
     .pipe(
-      map(([search, runes, sockets, itemCategories]) =>
+      map(([search, runes, sockets, itemCategories, reverse]) =>
       ({
-        search: search.toLowerCase().trim().split(/\s+/).filter(s => s.length > 0),
+        searchParts: search.toLowerCase().trim().split(/\s+/).filter(s => s.length > 0),
         runes,
         sockets,
-        itemCategories
+        itemCategories,
+        reverse
       }))
     );
 
+  readonly sortedRunewords$ = combineLatest([]);
+
   readonly filteredRunewords$ = this.filter$.pipe(
-    map(filt =>
-      this.runewords.filter(runeword => {
+    map(filt => {
+      const filteredRunewords = RUNEWORDS.filter(runeword => {
         const runewordAsString = (runeword.runes.join(' ') + runeword.attributes.join(' ') + runeword.name + runeword.itemType).toLowerCase();
-        const containsString = filt.search.length === 0 || filt.search.every(term => runewordAsString.includes(term));
-        const fitsSockets = filt.sockets.length === 0 || filt.sockets.includes(runeword.runes.length);
+        const containsString = filt.searchParts.length === 0 || filt.searchParts.every(term => runewordAsString.includes(term));
+        const fitsSockets = filt.sockets.length === 0 || (filt.sockets as number[]).includes(runeword.runes.length);
         const fitsRunes = filt.runes.length === 0 || runeword.runes.every(rune => filt.runes.includes(rune));
         const fitsCategories = filt.itemCategories.length === 0 || filt.itemCategories.some(cat => runeword.itemCategories.includes(cat));
         return containsString && fitsSockets && fitsRunes && fitsCategories;
-      })
+      });
+      if (filt.reverse) {
+        filteredRunewords.reverse();
+      }
+      return filteredRunewords;
+    }
     )
   );
+
+
+  constructor() {
+  }
 
   extractChecked<T>(a: { value: T, checked: boolean }[]): T[] {
     return a.filter(b => b.checked).map(b => b.value);
   }
 
-  constructor() {
-  }
-
-  private readonly destroyed = new Subject<void>();
-
   ngOnInit(): void {
-    const runesString = sessionStorage.getItem('runes');
-    if (runesString !== null && runesString.length > 0) {
-      this.runesCheckedSubject.next(JSON.parse(runesString));
+    const sessionFilterString = sessionStorage.getItem('filterState');
+    if (typeof sessionFilterString === 'string' && sessionFilterString.length > 0) {
+      const initialFilter = JSON.parse(sessionFilterString);
+      this.filterStateSubject.next(filterStateValid(initialFilter) ? initialFilter : defaultFilterState);
     }
-    const socketsString = sessionStorage.getItem('sockets');
-    if (socketsString !== null && socketsString.length > 0) {
-      this.socketsCheckedSubject.next(JSON.parse(socketsString));
-    }
-    const itemCategoriesString = sessionStorage.getItem('itemCategories');
-    if (itemCategoriesString !== null && itemCategoriesString.length > 0) {
-      this.itemCategoriesCheckedSubject.next(JSON.parse(itemCategoriesString));
-    }
-    this.searchControl.valueChanges.pipe(filter((v): v is string => typeof v === 'string'), takeUntil(this.destroyed)).subscribe(v => sessionStorage.setItem('search', v));
+    this.filterStateSubject.pipe(takeUntil(this.destroyed)).subscribe(filt => sessionStorage.setItem('filterState', JSON.stringify(filt)));
   }
 
   ngOnDestroy(): void {
@@ -102,21 +144,30 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroyed.complete();
   }
 
-  toggleRune(rune: Rune, eventTarget: EventTarget | null) {
-    const checked = eventTarget instanceof HTMLInputElement ? eventTarget.checked : false;
-    this.runesCheckedSubject.next({ ...this.runesCheckedSubject.value, [rune]: checked })
-    sessionStorage.setItem('runes', JSON.stringify(this.runesCheckedSubject.value));
+  setSearchString(eventTarget: EventTarget | null): void {
+    const searchString = eventTarget instanceof HTMLInputElement ? eventTarget.value : '';
+    this.filterStateSubject.next(
+      {
+        ...this.filterStateSubject.value,
+        searchString
+      }
+    );
   }
 
-  toggleSocket(socket: number, eventTarget: EventTarget | null) {
+  toggleMulti<RecordProperty extends keyof TypeExtract<FilterState, Record<any, any>>, Key extends RecordPropertyKeyType<FilterState, RecordProperty>>(
+    filterProperty: RecordProperty,
+    key: Key,
+    eventTarget: EventTarget | null
+  ): void {
     const checked = eventTarget instanceof HTMLInputElement ? eventTarget.checked : false;
-    this.socketsCheckedSubject.next({ ...this.socketsCheckedSubject.value, [socket]: checked })
-    sessionStorage.setItem('sockets', JSON.stringify(this.socketsCheckedSubject.value));
+    const currentRecord = (this.filterStateSubject.value as RecordExtract<FilterState>)[filterProperty];
+    const newRecord = { ...currentRecord, [key]: checked };
+    this.filterStateSubject.next({ ...this.filterStateSubject.value, [filterProperty]: newRecord });
   }
 
-  toggleItemCategory(itemCategory: ItemCategory, eventTarget: EventTarget | null) {
+  toggleSingle<BoolProperty extends keyof TypeExtract<FilterState, boolean>>(filterProperty: BoolProperty, eventTarget: EventTarget | null) {
     const checked = eventTarget instanceof HTMLInputElement ? eventTarget.checked : false;
-    this.itemCategoriesCheckedSubject.next({ ...this.itemCategoriesCheckedSubject.value, [itemCategory]: checked })
-    sessionStorage.setItem('itemCategories', JSON.stringify(this.itemCategoriesCheckedSubject.value));
+    this.filterStateSubject.next({ ...this.filterStateSubject.value, [filterProperty]: checked });
   }
+
 }

@@ -9,3 +9,4 @@ export interface Runeword {
 }
 export type ItemCategory = 'armor' | 'head' | 'melee' | 'ranged' | 'shield';
 export type Rune = 'Vex' | 'Hel' | 'El' | 'Eld' | 'Zod' | 'Eth' | 'Cham' | 'Sur' | 'Io' | 'Lo' | 'Amn' | 'Ber' | 'Ist' | 'Sol' | 'Ohm' | 'Um' | 'Jah' | 'Mal' | 'Ko' | 'Ith' | 'Gul' | 'Lem' | 'Fal' | 'Ort' | 'Pul' | 'Shael' | 'Dol' | 'Tir' | 'Lum' | 'Ral' | 'Thul' | 'Tal' | 'Nef';
+export type Socket = 2 | 3 | 4 | 5 | 6;

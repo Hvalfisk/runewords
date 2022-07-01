@@ -1,6 +1,8 @@
-import { Rune, Runeword } from "./types/runeword";
-export const runes: Rune[] = ['El', 'Eld', 'Tir', 'Nef', 'Eth', 'Ith', 'Tal', 'Ral', 'Ort', 'Thul', 'Amn', 'Sol', 'Shael', 'Dol', 'Hel', 'Io', 'Lum', 'Ko', 'Fal', 'Lem', 'Pul', 'Um', 'Mal', 'Ist', 'Gul', 'Vex', 'Ohm', 'Lo', 'Sur', 'Ber', 'Jah', 'Cham', 'Zod'];
-export const runewords: Runeword[] = [{
+import { ItemCategory, Rune, Runeword, Socket } from "./types/runeword";
+export const RUNES: ReadonlyArray<Rune> = ['El', 'Eld', 'Tir', 'Nef', 'Eth', 'Ith', 'Tal', 'Ral', 'Ort', 'Thul', 'Amn', 'Sol', 'Shael', 'Dol', 'Hel', 'Io', 'Lum', 'Ko', 'Fal', 'Lem', 'Pul', 'Um', 'Mal', 'Ist', 'Gul', 'Vex', 'Ohm', 'Lo', 'Sur', 'Ber', 'Jah', 'Cham', 'Zod'];
+export const ITEM_CATEGORIES: ReadonlyArray<ItemCategory> = ['armor', 'head', 'melee', 'ranged', 'shield'];
+export const SOCKETS: ReadonlyArray<Socket> = [2, 3, 4, 5, 6];
+export const RUNEWORDS: ReadonlyArray<Runeword> = [{
   name: "Breath of the Dying",
   runes: ["Vex", "Hel", "El", "Eld", "Zod", "Eth"],
   itemType: "All Weapons",

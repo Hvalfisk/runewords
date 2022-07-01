@@ -3,25 +3,36 @@
     <h1>Runewords</h1>
     <div class="filter-container">
       <div class="search-container">
-        <input id="search" type="text" [formControl]="searchControl" placeholder="Search">
+        <input id="search" type="text" [value]="(searchString$ | async) ?? ''" (change)="setSearchString($event.target)"
+          (input)="setSearchString($event.target)" placeholder="Search">
       </div>
       <div class="runes-container checkbox-group">
     <label *ngFor="let rune of (runes$ | async) ?? []">
-      <input type="checkbox" [checked]="rune.checked" (change)="toggleRune(rune.value, $event.target)">
+      <input type="checkbox" [checked]="rune.checked" (change)="toggleMulti('runes', rune.value, $event.target)">
       {{rune.value}}
     </label>
   </div>
   <div class="checkbox-group">
     <label *ngFor="let sock of (sockets$ | async) ?? []">
-      <input type="checkbox" [checked]="sock.checked" (change)="toggleSocket(sock.value, $event.target)">
+      <input type="checkbox" [checked]="sock.checked" (change)="toggleMulti('sockets', sock.value, $event.target)">
       {{sock.value}}
     </label>
   </div>
-  <div class="checkbox-group">
-    <label *ngFor="let itemCat of (itemCategories$ | async) ?? []">
-      <input type="checkbox" [checked]="itemCat.checked" (change)="toggleItemCategory(itemCat.value, $event.target)">
-      {{itemCat.value}}
-    </label>
+  <div class="filter-row">
+    <div class="checkbox-group">
+      <label *ngFor="let itemCat of (itemCategories$ | async) ?? []">
+        <input type="checkbox" [checked]="itemCat.checked"
+          (change)="toggleMulti('itemCategories', itemCat.value, $event.target)">
+        {{itemCat.value}}
+        </label>
+    </div>
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" [checked]="(reverseOrder$ | async) ?? false"
+          (change)="toggleSingle('reverse', $event.target)">
+        Reverse
+      </label>
+    </div>
   </div>
 </div>
 <div>
