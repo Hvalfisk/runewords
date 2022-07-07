@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ITEM_CATEGORIES, RUNES, RUNEWORDS, SOCKETS } from './runewords';
 import { ItemCategory, Rune, Socket } from './types/runeword';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, distinctUntilKeyChanged, filter, map, Observable, shareReplay, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilKeyChanged, map, Observable, Subject, takeUntil } from 'rxjs';
 
 type FilterState = Readonly<{
   searchString: string;
