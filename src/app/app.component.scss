@@ -2,11 +2,11 @@
 
 * {
   color: whitesmoke;
-  background-color: $background-color;
   font-family: $font;
 }
 
 .main-container {
+  background-color: $background-color;
   height: 100%;
   width: 100%;
   display: flex;
@@ -30,27 +30,76 @@
     border: none;
     border-bottom: 1px solid red;
     padding: 0 0.5rem 0.25rem 0.5rem;
+    background-color: $background-color;
+  }
+}
+
+.filter-container {
+  margin-top: -0.5rem;
+  > * {
+    margin: 0.5rem 0;
   }
 }
 
 .filter-row {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+}
+
+.filter-header {
+  margin: 1rem 0;
+  align-items: center;
+
+  h1 {
+    margin: 0.5rem 0;
+  }
+}
+
+.runes-container .checkbox-container {
+  width: 5rem;
 }
 
 .checkbox-group {
-  flex: 1 1 auto;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-  margin: 1rem 0;
-  > * {
-    padding: 0.5rem 0 0.5rem 0.5rem;
-    flex: 0 1 5rem;
+  align-items: flex-start;
 
-    &:hover {
+  .checkbox-container {
+    cursor: pointer;
+
+    .checkbox-label {
       cursor: pointer;
-      background-color: $background-color-hover;
+      position: relative;
+      &:hover {
+        background-color: $background-color-hover;
+      }
+      text-transform: capitalize;
+      display: flex;
+      padding: 0.5rem 1rem;
+
+      input {
+        opacity: 0;
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+
+      align-items: center;
+      flex-flow: row nowrap;
+
+      .checkmark {
+        width: 8px;
+        height: 8px;
+        margin-right: 8px;
+        border: 1px solid grey;
+        flex: 0 0 auto;
+      }
+      input:checked ~ .checkmark {
+        background-color: red;
+        border: none;
+      }
     }
   }
 }
