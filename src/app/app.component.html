@@ -3,6 +3,16 @@
     <div class="filter-container">
       <div class="filter-row filter-header">
         <h1>Runewords</h1>
+        <div class="checkbox-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">
+            <input type="checkbox" [checked]="(reverseOrder$ | async) ?? false"
+              (change)="toggleSingle('runesRequireAll', $event.target)">
+            <div class="checkmark"></div>
+            Must include runes
+          </label>
+        </div>
+        </div>
         <div class="search-container">
           <input id="search" type="text" [value]="(searchString$ | async) ?? ''"
             (change)="setSearchString($event.target)" (input)="setSearchString($event.target)" placeholder="Search">

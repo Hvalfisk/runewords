@@ -6,6 +6,7 @@ import { BehaviorSubject, combineLatest, distinctUntilKeyChanged, map, Observabl
 type FilterState = Readonly<{
   searchString: string;
   runes: Record<Rune, boolean>;
+  runesRequireAll: boolean;
   sockets: Record<Socket, boolean>;
   itemCategories: Record<ItemCategory, boolean>;
   reverse: boolean;
@@ -23,6 +24,7 @@ type RecordPropertyKeyType<T, K extends keyof RecordExtract<T>> = T[K] extends R
 const defaultFilterState: FilterState = {
   searchString: '',
   reverse: false,
+  runesRequireAll: false,
   sortBy: 'rune',
   sockets: { 2: false, 3: false, 4: false, 5: false, 6: false },
   itemCategories: { 'armor': false, 'head': false, 'melee': false, 'ranged': false, 'shield': false },
@@ -75,6 +77,10 @@ export class AppComponent implements OnInit, OnDestroy {
     distinctUntilKeyChanged('reverse'),
     map(filt => filt.reverse)
   );
+  readonly runesRequireAll$ = this.filterStateSubject.pipe(
+    distinctUntilKeyChanged('runesRequireAll'),
+    map(filt => filt.runesRequireAll)
+  );
 
   readonly runewords$ = this.reverseOrder$.pipe(map(reverse => reverse ? [...RUNES].reverse() : RUNES));
 
@@ -88,16 +94,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.runes$.pipe(map(v => this.extractChecked(v))),
     this.sockets$.pipe(map(v => this.extractChecked(v))),
     this.itemCategories$.pipe(map(v => this.extractChecked(v))),
-    this.reverseOrder$
+    this.reverseOrder$,
+    this.runesRequireAll$
   ])
     .pipe(
-      map(([search, runes, sockets, itemCategories, reverse]) =>
+      map(([search, runes, sockets, itemCategories, reverse, runesRequireAll]) =>
       ({
         searchParts: search.toLowerCase().trim().split(/\s+/).filter(s => s.length > 0),
         runes,
         sockets,
         itemCategories,
-        reverse
+        reverse,
+        runesRequireAll
       }))
     );
 
@@ -110,8 +118,9 @@ export class AppComponent implements OnInit, OnDestroy {
         const containsString = filt.searchParts.length === 0 || filt.searchParts.every(term => runewordAsString.includes(term));
         const fitsSockets = filt.sockets.length === 0 || (filt.sockets as number[]).includes(runeword.runes.length);
         const fitsRunes = filt.runes.length === 0 || runeword.runes.every(rune => filt.runes.includes(rune));
+        const hasRunes = filt.runes.length === 0 || filt.runes.every(rune => runeword.runes.includes(rune));
         const fitsCategories = filt.itemCategories.length === 0 || filt.itemCategories.some(cat => runeword.itemCategories.includes(cat));
-        return containsString && fitsSockets && fitsRunes && fitsCategories;
+        return containsString && fitsSockets && (filt.runesRequireAll ? hasRunes : fitsRunes) && fitsCategories;
       });
       if (filt.reverse) {
         filteredRunewords.reverse();
