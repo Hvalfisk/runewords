@@ -239,7 +239,7 @@ export const RUNEWORDS: ReadonlyArray<Runeword> = [{
   runes: ["Ko", "Vex", "Pul", "Thul"],
   itemType: "Staves & Maces",
   itemCategories: ['melee'],
-  level: 5,
+  level: 55,
   attributes: ["+3 To All Skills", "+40% Faster Cast Rate", "+75% Damage To Demons", "+100 To Attack Rating Against Demons", "Adds 3-14 Cold Damage", "7% Mana Stolen Per Hit", "+10 To Dexterity", "Replenish Life +20", "Increase Maximum Mana 15%", "All Resistances +30-40 (varies)", "Level 4 Oak Sage (25 Charges)", "Level 14 Raven (60 Charges)"],
   ladderOnly: false
 }, {
