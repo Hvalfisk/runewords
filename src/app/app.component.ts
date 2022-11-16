@@ -114,7 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly filteredRunewords$ = this.filter$.pipe(
     map(filt => {
       const filteredRunewords = RUNEWORDS.filter(runeword => {
-        const runewordAsString = (runeword.runes.join(' ') + runeword.attributes.join(' ') + runeword.name + runeword.itemType).toLowerCase();
+        const runewordAsString = (runeword.runes.join(' ') + runeword.attributes.join(' ') + ' ' + runeword.name + ' ' + runeword.itemType).toLowerCase();
         const containsString = filt.searchParts.length === 0 || filt.searchParts.every(term => runewordAsString.includes(term));
         const fitsSockets = filt.sockets.length === 0 || (filt.sockets as number[]).includes(runeword.runes.length);
         const fitsRunes = filt.runes.length === 0 || runeword.runes.every(rune => filt.runes.includes(rune));
@@ -139,12 +139,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const sessionFilterString = sessionStorage.getItem('filterState');
-    if (typeof sessionFilterString === 'string' && sessionFilterString.length > 0) {
-      const initialFilter = JSON.parse(sessionFilterString);
+    const localFilterString = localStorage.getItem('filterState');
+    if (typeof localFilterString === 'string' && localFilterString.length > 0) {
+      const initialFilter = JSON.parse(localFilterString);
       this.filterStateSubject.next(filterStateValid(initialFilter) ? initialFilter : defaultFilterState);
     }
-    this.filterStateSubject.pipe(takeUntil(this.destroyed)).subscribe(filt => sessionStorage.setItem('filterState', JSON.stringify(filt)));
+    this.filterStateSubject.pipe(takeUntil(this.destroyed)).subscribe(filt => localStorage.setItem('filterState', JSON.stringify(filt)));
   }
 
   ngOnDestroy(): void {

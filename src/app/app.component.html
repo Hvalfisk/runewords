@@ -6,7 +6,7 @@
         <div class="checkbox-group">
         <div class="checkbox-container">
           <label class="checkbox-label">
-            <input type="checkbox" [checked]="(reverseOrder$ | async) ?? false"
+            <input type="checkbox" [checked]="(runesRequireAll$ | async) ?? false"
               (change)="toggleSingle('runesRequireAll', $event.target)">
             <div class="checkmark"></div>
             Must include runes
